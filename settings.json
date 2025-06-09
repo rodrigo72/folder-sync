@@ -1,0 +1,15 @@
+{
+    "pc_number": 2,
+    "folder_path": "C:\\Users\\user1\\Desktop\\obsidian-vault-1",
+    "folder_metadata_path": "C:\\Users\\user1\\Desktop\\python_scripts\\folder_sync\\folder_metadata.json",
+    "folder_pc_1_updates_path": "C:\\Users\\user1\\Documents\\GitHub\\folder_sync\\updates\\pc_1_updates.json",
+    "folder_pc_2_updates_path": "C:\\Users\\user1\\Documents\\GitHub\\folder_sync\\updates\\pc_2_updates.json",
+    "files_to_sync_from_pc_1": "C:\\Users\\user1\\Documents\\GitHub\\folder_sync\\/files_to_sync\\from_pc_1",
+    "files_to_sync_from_pc_2": "C:\\Users\\user1\\Documents\\GitHub\\folder_sync\\files_to_sync\\from_pc_2",
+    "git": {
+        "repo_path": "C:\\Users\\user1\\Documents\\GitHub\\obsidian-updates",
+        "remote": "https://github.com/user1/obsidian-updates.git",
+        "branch": "main",
+        "token": "ghp_xxxx"
+    }
+}
