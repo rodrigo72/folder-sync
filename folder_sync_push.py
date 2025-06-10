@@ -5,6 +5,7 @@ import sys
 import shutil
 import subprocess
 from utils import scan_folder, save_json, load_json, norm_path
+from crypto_utils import encrypt_file
 
 
 def compare_metadata(old_meta, new_meta):
@@ -22,23 +23,28 @@ def compare_metadata(old_meta, new_meta):
     return added, deleted, modified
 
 
-def copy_files(folder_path, files, dest_dir):
+def copy_and_encrypt_files(folder_path, files, dest_dir, password):
     if os.path.exists(dest_dir):
         shutil.rmtree(dest_dir)
     os.makedirs(dest_dir, exist_ok=True)
 
     for rel in files:
         src = norm_path(folder_path, rel)
-        dst = norm_path(dest_dir, rel)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        temp_dst = norm_path(dest_dir, rel)
+        os.makedirs(os.path.dirname(temp_dst), exist_ok=True)
+
         try:
-            shutil.copy2(src, dst)
+            shutil.copy2(src, temp_dst)
         except FileNotFoundError:
             print(f"Warning: source not found for copy -> {rel}", file=sys.stderr)
+            continue
+
+        encrypted_path = encrypt_file(temp_dst, password)
+        os.remove(temp_dst)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Scan a folder, record updates, stage files to sync, and push to git.")
+    parser = argparse.ArgumentParser(description="Scan a folder, record updates, stage files to sync (encrypted), and push to git.")
     parser.add_argument('-s', '--settings', required=True, help="Path to settings JSON")
     args = parser.parse_args()
 
@@ -46,11 +52,12 @@ def main():
     pc_number = int(settings.get('pc_number'))
     folder_path = settings.get('folder_path')
     folder_metadata_path = settings.get('folder_metadata_path')
-    updates_path = settings.get(f'folder_pc_{'1' if pc_number == 1 else '2'}_updates_path')
-    files_to_sync_dir = settings.get(f'files_to_sync_from_pc_{'1' if pc_number == 1 else '2'}')
+    updates_path = settings.get(f'folder_pc_{ "1" if pc_number == 1 else "2" }_updates_path')
+    files_to_sync_dir = settings.get(f'files_to_sync_from_pc_{ "1" if pc_number == 1 else "2" }')
     git_cfg = settings.get('git', {})
+    password = settings.get('encryption_password')
 
-    if not all([folder_path, folder_metadata_path, updates_path, files_to_sync_dir, git_cfg]):
+    if not all([password, folder_path, folder_metadata_path, updates_path, files_to_sync_dir, git_cfg]):
         print("Error: settings.json missing required keys.", file=sys.stderr)
         sys.exit(1)
 
@@ -58,20 +65,19 @@ def main():
         print(f"Error: folder not found: {folder_path}", file=sys.stderr)
         sys.exit(1)
 
-    # initialize metadata
     if not os.path.isfile(folder_metadata_path):
         print(f"Error: metadata file not found: {folder_metadata_path}", file=sys.stderr)
         sys.exit(1)
 
-    # load existing metadata and scan folder
+    # load old metadata & scan folder
     old_meta = load_json(folder_metadata_path)
     new_map = scan_folder(folder_path)
     new_meta = {'generated_at': time.time(), 'files': new_map}
 
-    # compare
+    # diff
     added, deleted, modified = compare_metadata(old_meta, new_meta)
 
-    # merge with existing updates
+    # merge updates
     existing = load_json(updates_path) if os.path.isfile(updates_path) else {'added': [], 'deleted': [], 'modified': []}
     merged = {
         'generated_at': time.time(),
@@ -86,11 +92,11 @@ def main():
     print(f"  Deleted: {len(deleted)}")
     print(f"  Modified:{len(modified)}")
 
-    # stage added & modified files
-    copy_files(folder_path, added + modified, files_to_sync_dir)
-    print(f"Staged {len(added) + len(modified)} files -> {files_to_sync_dir}")
+    # ← REPLACED: stage + encrypt added & modified files
+    copy_and_encrypt_files(folder_path, added + modified, files_to_sync_dir, password)
+    print(f"Staged & encrypted {len(added) + len(modified)} files -> {files_to_sync_dir}")
 
-    # git push 
+    # git push (if any changes)
     if git_cfg and (added or deleted or modified):
         repo_path = git_cfg.get('repo_path')
         remote = git_cfg.get('remote')

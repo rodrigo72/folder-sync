@@ -11,5 +11,6 @@
         "remote": "https://github.com/user1/obsidian-updates.git",
         "branch": "main",
         "token": "ghp_xxxx"
-    }
+    },
+    "encryption_password": "very-strong-password"
 }
