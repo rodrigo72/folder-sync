@@ -1,3 +1,9 @@
+import os
+import time
+import argparse
+import sys
+from utils import scan_folder, save_json, load_json
+
 
 def main():
     parser = argparse.ArgumentParser(description="Init metadata (before any first push or pull)")
