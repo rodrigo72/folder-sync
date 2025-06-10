@@ -38,11 +38,8 @@ def copy_files(folder_path, files, dest_dir):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Scan a folder, record updates, stage files to sync, and push to git."
-    )
-    parser.add_argument('-s', '--settings', required=True,
-                        help="Path to settings JSON")
+    parser = argparse.ArgumentParser(description="Scan a folder, record updates, stage files to sync, and push to git.")
+    parser.add_argument('-s', '--settings', required=True, help="Path to settings JSON")
     args = parser.parse_args()
 
     settings = load_json(args.settings)
@@ -63,11 +60,8 @@ def main():
 
     # initialize metadata
     if not os.path.isfile(folder_metadata_path):
-        new_files = scan_folder(folder_path)
-        metadata = {'generated_at': time.time(), 'files': new_files}
-        save_json(folder_metadata_path, metadata)
-        print(f"Initialized metadata ({len(new_files)} files) -> {folder_metadata_path}")
-        return
+        print(f"Error: metadata file not found: {folder_metadata_path}", file=sys.stderr)
+        sys.exit(1)
 
     # load existing metadata and scan folder
     old_meta = load_json(folder_metadata_path)
