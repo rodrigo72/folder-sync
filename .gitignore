@@ -160,5 +160,5 @@ cython_debug/
 #.idea/
 
 settings_private.json
-vault_metadata.json
+metadata.json
 keys/
