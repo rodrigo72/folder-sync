@@ -1,16 +1,17 @@
 {
-    "pc_number": 2,
-    "folder_path": "C:\\Users\\user1\\Desktop\\obsidian-vault-1",
-    "folder_metadata_path": "C:\\Users\\user1\\Desktop\\python_scripts\\folder_sync\\folder_metadata.json",
-    "folder_pc_1_updates_path": "C:\\Users\\user1\\Documents\\GitHub\\folder_sync\\updates\\pc_1_updates.json",
-    "folder_pc_2_updates_path": "C:\\Users\\user1\\Documents\\GitHub\\folder_sync\\updates\\pc_2_updates.json",
-    "files_to_sync_from_pc_1": "C:\\Users\\user1\\Documents\\GitHub\\folder_sync\\/files_to_sync\\from_pc_1",
-    "files_to_sync_from_pc_2": "C:\\Users\\user1\\Documents\\GitHub\\folder_sync\\files_to_sync\\from_pc_2",
+    "pc_number": 1,
+    "folder_path": "/home/user/pcs_simulation/pc1/data",
+    "folder_metadata_path": "/home/user/pcs_simulation/pc1/metadata.json",
+    "folder_pc_1_updates_path": "/home/user/pcs_simulation/pc1/repo/updates/pc1.json",
+    "folder_pc_2_updates_path": "/home/user/pcs_simulation/pc1/repo/updates/pc2.json",
+    "files_to_sync_from_pc_1": "/home/user/pcs_simulation/pc1/repo/files/from_pc1",
+    "files_to_sync_from_pc_2": "/home/user/pcs_simulation/pc1/repo/files/from_pc2",
     "git": {
-        "repo_path": "C:\\Users\\user1\\Documents\\GitHub\\obsidian-updates",
-        "remote": "https://github.com/user1/obsidian-updates.git",
+        "repo_path": "/home/user/pcs_simulation/pc1/repo",
+        "remote": "https://github.com/user/folder-sync-updates.git",
         "branch": "main",
-        "token": "ghp_xxxx"
+        "token": "ghp_---"
     },
-    "encryption_password": "very-strong-password"
+    "public_key_path": "/home/user/pcs_simulation/keys/public_key.pem",
+    "private_key_path": "/home/user/pcs_simulation/keys/private_key.pem"
 }
