@@ -161,3 +161,4 @@ cython_debug/
 
 settings_private.json
 vault_metadata.json
+keys/
