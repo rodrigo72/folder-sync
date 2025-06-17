@@ -123,7 +123,7 @@ def main():
     added        = diff['added']
     deleted      = diff['deleted']
     modified     = diff['modified']
-    moved        = diff['moved']
+    moved        = [list(m) for m in diff['moved']]  # Convert tuples to lists
     deleted_dirs = diff['deleted_dirs']
 
     # --- MERGE INTO PENDING UPDATES JSON ---
@@ -137,9 +137,11 @@ def main():
         'added':         sorted(set(existing.get('added',[])       + added)),
         'deleted':       sorted(set(existing.get('deleted',[])     + deleted)),
         'modified':      sorted(set(existing.get('modified',[])    + modified)),
-        'moved':         sorted(set(existing.get('moved',[])       + moved)),
+        'moved':         sorted(set(tuple(x) for x in existing.get('moved',[])) | set(tuple(x) for x in moved)),
         'deleted_dirs':  sorted(set(existing.get('deleted_dirs',[])+ deleted_dirs)),
     }
+    # convert moved back to list of lists for JSON compatibility
+    merged['moved'] = [list(x) for x in merged['moved']]
     save_json(updates_path, merged)
 
     print(f"Updates recorded -> {updates_path}")
